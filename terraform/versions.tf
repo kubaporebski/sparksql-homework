@@ -9,10 +9,5 @@ terraform {
 			source = "hashicorp/random"
 			version = "3.1.0"
 		}
-        
-        databricks = {
-          source  = "databrickslabs/databricks"
-          version = "0.3.9"
-        }
 	}
 }

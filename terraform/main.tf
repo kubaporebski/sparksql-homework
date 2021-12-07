@@ -37,32 +37,3 @@ resource "google_storage_bucket_iam_binding" "binding" {
     "serviceAccount:${google_service_account.service_account.email}",
   ]
 }
-
-data "databricks_node_type" "smallest" {
-  local_disk = true
-}
-
-data "databricks_spark_version" "latest_lts" {
-  long_term_support = true
-}
-
-resource "databricks_cluster" "work_cluster" {
-  cluster_name            = "${random_pet.random_suffix.id}-cluster"
-  spark_version           = data.databricks_spark_version.latest_lts.id
-  node_type_id            = data.databricks_node_type.smallest.id
-  autotermination_minutes = 120
-
-  spark_conf = {
-    # Single-node
-    "spark.databricks.cluster.profile" : "singleNode"
-    "spark.master" : "local[*]"
-  }
-
-  custom_tags = {
-    "ResourceClass" = "SingleNode"
-  }
-
-  gcp_attributes {
-       google_service_account = "${google_service_account.service_account.email}"
-  }
-}
