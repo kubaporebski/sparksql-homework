@@ -18,20 +18,6 @@ public class Task {
                 .config("fs.AbstractFileSystem.gs.impl", "com.google.cloud.hadoop.fs.gcs.GoogleHadoopFS")
                 .getOrCreate();
 
-        Dataset<Row> data = spark
-                .read()
-                .option("header", true)
-                .option("inferSchema", true)
-                .csv("gs://storage-bucket-secure-frog/output");
-
-
-        data.createOrReplaceTempView("data");
-
-        spark.sql("SELECT * FROM data LIMIT 1")
-                .coalesce(1)
-                .write()
-                .csv("gs://storage-bucket-secure-frog/output_sql");
-
         spark.stop();
     }
 }
