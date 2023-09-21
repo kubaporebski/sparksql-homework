@@ -8,20 +8,8 @@ public class Task {
 
     public static void main(String[] args) {
 
-        try (SparkSession spark = SparkSession
-                .builder()
-                .master("local[*]")
-                .appName("SparkSQL")
-                .config("spark.hadoop.fs.AbstractFileSystem.gs.impl", "com.google.cloud.hadoop.fs.gcs.GoogleHadoopFS")
-                .config("spark.hadoop.google.cloud.auth.service.account.enable", "true")
-                .config("fs.gs.impl", "com.google.cloud.hadoop.fs.gcs.GoogleHadoopFileSystem")
-                .config("fs.AbstractFileSystem.gs.impl", "com.google.cloud.hadoop.fs.gcs.GoogleHadoopFS")
-                .getOrCreate()) {
+        System.out.println("Simon says: follow instructions in the README file.");
 
-
-
-
-        }
     }
 }
 
