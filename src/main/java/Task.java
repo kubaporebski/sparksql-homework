@@ -8,7 +8,7 @@ public class Task {
 
     public static void main(String[] args) {
 
-        SparkSession spark = SparkSession
+        try (SparkSession spark = SparkSession
                 .builder()
                 .master("local[*]")
                 .appName("SparkSQL")
@@ -16,9 +16,12 @@ public class Task {
                 .config("spark.hadoop.google.cloud.auth.service.account.enable", "true")
                 .config("fs.gs.impl", "com.google.cloud.hadoop.fs.gcs.GoogleHadoopFileSystem")
                 .config("fs.AbstractFileSystem.gs.impl", "com.google.cloud.hadoop.fs.gcs.GoogleHadoopFS")
-                .getOrCreate();
+                .getOrCreate()) {
 
-        spark.stop();
+
+
+
+        }
     }
 }
 

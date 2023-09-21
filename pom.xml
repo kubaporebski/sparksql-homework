@@ -85,6 +85,30 @@
       <version>1.32.1</version>
     </dependency>
 
+    <!-- DELTA -->
+    <!-- https://mvnrepository.com/artifact/io.delta/delta-core -->
+    <dependency>
+      <groupId>io.delta</groupId>
+      <artifactId>delta-core_2.13</artifactId>
+      <version>2.4.0</version>
+    </dependency>
+
+    <!-- https://mvnrepository.com/artifact/io.delta/delta-storage -->
+    <dependency>
+      <groupId>io.delta</groupId>
+      <artifactId>delta-storage</artifactId>
+      <version>2.4.0</version>
+    </dependency>
+
+    <!-- https://mvnrepository.com/artifact/io.delta/delta-spark -->
+    <dependency>
+      <groupId>io.delta</groupId>
+      <artifactId>delta-spark_2.13</artifactId>
+      <version>3.0.0rc1</version>
+    </dependency>
+
+
+
     <!--test-->
     <dependency>
       <groupId>org.scalatest</groupId>
