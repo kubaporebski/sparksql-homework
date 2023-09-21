@@ -30,7 +30,7 @@
 -- MAGIC %md
 -- MAGIC Let's go to our Google Cloud bucket and see input data.
 -- MAGIC
--- MAGIC ![](/files/tables/input_data.png)
+-- MAGIC ![](https://github.com/kubaporebski/sparksql-homework/blob/master/docs/input_data.png?raw=true)
 
 -- COMMAND ----------
 
@@ -204,7 +204,7 @@ create or replace table result_hotels_weather_trend LOCATION '${ob.BUCKET_PATH}/
 -- MAGIC %md
 -- MAGIC View on the results in Google Cloud bucket:
 -- MAGIC
--- MAGIC ![](/files/tables/result_tables-2.png)
+-- MAGIC ![](https://github.com/kubaporebski/sparksql-homework/blob/master/docs/result_tables.png?raw=true)
 
 -- COMMAND ----------
 
