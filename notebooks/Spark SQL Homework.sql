@@ -137,10 +137,8 @@ select * from v_top10_busy_hotels
 -- MAGIC plt.title('Check ins by year/month and hotel')
 -- MAGIC plt.xlabel('Year/month')
 -- MAGIC plt.ylabel('Total check ins')
--- MAGIC plt.legend(title='Hotel ID', bbox_to_anchor=(1.05, 1), loc='upper left')
+-- MAGIC plt.legend(title='Hotel ID',  bbox_to_anchor=(1.1, 1))
 -- MAGIC plt.ylim(min_y - (0.01 * min_y), max_y + (0.01 * max_y))
--- MAGIC
--- MAGIC plt.tight_layout()
 -- MAGIC plt.show()
 
 -- COMMAND ----------
