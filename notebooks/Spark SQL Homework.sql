@@ -20,7 +20,7 @@
 
 -- COMMAND ----------
 
--- DBTITLE 1,Here you have to set google bucket name. It will be result of executing a `terraform apply`
+-- DBTITLE 1,Here you have to set the google bucket name. It will be a result of executing a `terraform apply`
 -- MAGIC %python
 -- MAGIC # without a single slash at the end
 -- MAGIC spark.conf.set("ob.BUCKET_PATH", "gs://storage-bucket-large-hedgehog")
@@ -78,6 +78,22 @@ select * from v_top10_hotels_temp
 
 -- COMMAND ----------
 
+-- MAGIC %python
+-- MAGIC import seaborn as sns
+-- MAGIC import matplotlib.pyplot as plt
+
+-- COMMAND ----------
+
+-- DBTITLE 1,Temperature difference visualized 
+-- MAGIC %python
+-- MAGIC # let's create pandas datasets for Seaborn plotting library
+-- MAGIC pd_top10hotels = spark.sql("select hotel_address, temp_diff from v_top10_hotels_temp").toPandas()
+-- MAGIC sns.barplot(y=pd_top10hotels["hotel_address"], x=pd_top10hotels["temp_diff"], orient="h")
+-- MAGIC plt.xlabel('Temperature difference')
+-- MAGIC plt.ylabel('Hotel')
+
+-- COMMAND ----------
+
 -- DBTITLE 1,2. Top 10 busy (e.g., with the biggest visits count) hotels for each month
 -- first temporary view, which stores count of check-ins of a given hotel for each month
 create or replace temp view v_tmp_expedia_checkins as
@@ -109,6 +125,23 @@ from
 where rn <= 10;
 
 select * from v_top10_busy_hotels
+
+-- COMMAND ----------
+
+-- MAGIC %python
+-- MAGIC pd_top10busyhotels = spark.sql("select check_in_year_month as year_month, check_ins, hotel_id, hotel_address from v_top10_busy_hotels").toPandas()
+-- MAGIC max_y, min_y = pd_top10busyhotels["check_ins"].max(), pd_top10busyhotels["check_ins"].min()
+-- MAGIC
+-- MAGIC plt.figure(figsize=(12, 6))
+-- MAGIC sns.barplot(x='year_month', y=pd_top10busyhotels['check_ins'], hue='hotel_address', data=pd_top10busyhotels)
+-- MAGIC plt.title('Check ins by year/month and hotel')
+-- MAGIC plt.xlabel('Year/month')
+-- MAGIC plt.ylabel('Total check ins')
+-- MAGIC plt.legend(title='Hotel ID', bbox_to_anchor=(1.05, 1), loc='upper left')
+-- MAGIC plt.ylim(min_y - (0.01 * min_y), max_y + (0.01 * max_y))
+-- MAGIC
+-- MAGIC plt.tight_layout()
+-- MAGIC plt.show()
 
 -- COMMAND ----------
 
@@ -205,6 +238,47 @@ create or replace table result_hotels_weather_trend LOCATION '${ob.BUCKET_PATH}/
 -- MAGIC View on the results in Google Cloud bucket:
 -- MAGIC
 -- MAGIC ![](https://github.com/kubaporebski/sparksql-homework/blob/master/docs/result_tables.png?raw=true)
+
+-- COMMAND ----------
+
+-- MAGIC %md
+-- MAGIC ## Analysis of queries
+-- MAGIC
+-- MAGIC Now, we can perform analysis of each query. `explain` keyword will tell us what is going on inside the engine.
+-- MAGIC
+
+-- COMMAND ----------
+
+explain select * from v_top10_hotels_temp
+
+-- COMMAND ----------
+
+explain select * from v_top10_busy_hotels
+
+-- COMMAND ----------
+
+explain select * from v_weather_trends
+
+-- COMMAND ----------
+
+-- MAGIC %md
+-- MAGIC `v_weather_trends` is a view that is build from query containing `lateral` joins. 
+-- MAGIC Following however, is explain result of query `v_weather_trends_alpha`, which contains `cross join`. 
+-- MAGIC
+-- MAGIC Those two execution plans cleary are different from each other.
+
+-- COMMAND ----------
+
+explain select * from v_weather_trends_alpha
+
+-- COMMAND ----------
+
+-- MAGIC %md
+-- MAGIC I have Photon support enabled on the cluster thus my `explain` output contains everything Photon. Anyway, results here are physical plans.
+-- MAGIC Starting from the very bottom, going upwards, we can see how each operation is applied after each.
+-- MAGIC
+-- MAGIC There can be also tree-like structure. It is seen in output of `explain select * from v_weather_trends`. 
+-- MAGIC
 
 -- COMMAND ----------
 
