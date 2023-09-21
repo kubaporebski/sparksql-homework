@@ -20,6 +20,13 @@
 
 -- COMMAND ----------
 
+-- DBTITLE 1,Here you have to set google bucket name. It will be result of executing a `terraform apply`
+-- MAGIC %python
+-- MAGIC # without a single slash at the end
+-- MAGIC spark.conf.set("ob.BUCKET_PATH", "gs://storage-bucket-large-hedgehog")
+
+-- COMMAND ----------
+
 -- MAGIC %md
 -- MAGIC Let's go to our Google Cloud bucket and see input data.
 -- MAGIC
@@ -28,10 +35,10 @@
 -- COMMAND ----------
 
 -- DBTITLE 1,Creation of a delta table `expedia`
-create table if not exists expedia
+create or replace table expedia
 as
 select * from 
-avro.`gs://storage-bucket-large-hedgehog/expedia/`;
+avro.`${ob.BUCKET_PATH}/expedia/`;
 
 describe detail expedia;
 
@@ -41,7 +48,7 @@ describe detail expedia;
 create or replace table hotel_weather
 as
 select * from 
-parquet.`gs://storage-bucket-large-hedgehog/hotel-weather`;
+parquet.`${ob.BUCKET_PATH}/hotel-weather`;
 
 describe detail hotel_weather;
 
@@ -188,9 +195,9 @@ select * from v_weather_trends_alpha
 
 -- COMMAND ----------
 
-create or replace table result_top10_hotels_temperature LOCATION 'gs://storage-bucket-large-hedgehog/result/top10_hotels_temperature' as select * from v_top10_hotels_temp;
-create or replace table result_top10_busy_hotels LOCATION 'gs://storage-bucket-large-hedgehog/result/top10_busy_hotels' as select * from v_top10_busy_hotels;
-create or replace table result_hotels_weather_trend LOCATION 'gs://storage-bucket-large-hedgehog/result/hotels_weather_trend' as select * from v_weather_trends;
+create or replace table result_top10_hotels_temperature LOCATION '${ob.BUCKET_PATH}/result/top10_hotels_temperature' as select * from v_top10_hotels_temp;
+create or replace table result_top10_busy_hotels LOCATION '${ob.BUCKET_PATH}/result/top10_busy_hotels' as select * from v_top10_busy_hotels;
+create or replace table result_hotels_weather_trend LOCATION '${ob.BUCKET_PATH}/result/hotels_weather_trend' as select * from v_weather_trends;
 
 -- COMMAND ----------
 
